@@ -36,11 +36,11 @@ def predictRoute():
         image = request.json['image']
         decodeImage(image, clApp.filename)
 
-        os.system("cd yolov5/ && python detect.py --weights my_model.pt --img 416 --conf 0.5 --source ../data/inputImage.jpg")
+        os.system("cd yolov5/ && python detect.py --weights yolov5_waste.pt --img 416 --conf 0.5 --source ../data/inputImage.jpg")
 
         opencodedbase64 = encodeImageIntoBase64("yolov5/runs/detect/exp/inputImage.jpg")
         result = {"image": opencodedbase64.decode('utf-8')}
-        os.system("rm -rf yolov5/runs")
+        os.system("rm -rf yolov5/runs/detect")
 
     except ValueError as val:
         print(val)
@@ -58,7 +58,7 @@ def predictRoute():
 @cross_origin()
 def predictLive():
     try:
-        os.system("cd yolov5/ && python detect.py --weights my_model.pt --img 416 --conf 0.5 --source 0")
+        os.system("cd yolov5/ && python detect.py --weights yolov5_waste.pt --img 416 --conf 0.5 --source 0")
         os.system("rm -rf yolov5/runs")
         return "Camera starting!!" 
 
@@ -66,3 +66,6 @@ def predictLive():
         print(val)
         return Response("Value not found inside  json data")
 
+if __name__ == "__main__":
+    clApp = ClientApp()
+    app.run(host=APP_HOST, port=APP_PORT)
